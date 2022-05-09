@@ -46,12 +46,12 @@ function draw() {
 
 
     let v = epicycles(width / 2, height / 2, 0, fourierX);
-    ys.unshift(v);
+    if(d)ys.unshift(v);
     beginShape();
     noFill();
     //strokeWeight(2);
     stroke(0, 100);
-    for (let i = 0; d && i < ys.length; i++) {
+    for (let i = 0; i < ys.length; i++) {
       vertex(ys[i].x, ys[i].y);
     }
     endShape();
