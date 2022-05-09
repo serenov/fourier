@@ -3,7 +3,7 @@ let fourierX;
 let time = 0;
 let ys = [];
 let x = [];
-let draw = 1;
+let d = 1;
 
 function init() {
   const skip = 6;
@@ -51,7 +51,7 @@ function draw() {
     noFill();
     //strokeWeight(2);
     stroke(0, 100);
-    for (let i = 0; draw && i < ys.length; i++) {
+    for (let i = 0; d && i < ys.length; i++) {
       vertex(ys[i].x, ys[i].y);
     }
     endShape();
@@ -59,8 +59,8 @@ function draw() {
     const dt = TWO_PI / fourierX.length;
     time += dt;
 
-    if (draw && time > TWO_PI) {
-      draw = 0;
+    if (d && time > TWO_PI) {
+      d = 0;
      // time = 0;
   }
 
