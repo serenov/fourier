@@ -1,46 +1,68 @@
-//inspired by code train...
+//inspired by codingtrain
+let fourierX;
+let time = 0;
 let ys = [];
-let angle = 0;
-let radius = 100;
-function setup() {
-  createCanvas(1000, 900);
+let x = [];
 
+function init() {
+  const skip = 6;
+  for (let i = 0; i < drawing.length; i += skip ){
+    x.push(new Complex(drawing[i].x - 300, drawing[i].y - 350));
+  }
+  fourierX = epicircle(x);
+
+  fourierX.sort((a, b) => b.amp - a.amp);
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  init();
+  
+}
+
+function epicycles(x, y, rotation, fourier) {
+  for (let i = 0; i < fourier.length; i++) {
+    let prevx = x;
+    let prevy = y;
+    let freq = fourier[i].freq;
+    let radius = fourier[i].amp;
+    let phase = fourier[i].phase;
+    x += radius * cos(freq * time + phase + rotation);
+    y += radius * sin(freq * time + phase + rotation);
+
+    stroke(90, 50);
+    noFill();
+    //strokeWeight(2)
+    ellipse(prevx, prevy, radius * 2);
+    stroke(0, 150);
+    line(prevx, prevy, x, y);
+  }
+  return createVector(x, y);
 }
 
 function draw() {
-  background(0);
-  strokeWeight(2);
-  
-  let arr = drawFor(1);
-  ys.unshift(arr[1])
-  line(arr[0], arr[1], 300, arr[1]);
-  translate(300, 0)
-  beginShape();
-  noFill();
-  for(var i = 0; i < ys.length; i++){
-    stroke('red')
-    vertex(i, ys[i])
+    background("white");
+
+
+    let v = epicycles(width / 2, height / 2, 0, fourierX);
+    ys.unshift(v);
+    beginShape();
+    noFill();
+    //strokeWeight(2);
+    stroke(0, 100);
+    for (let i = 0; i < ys.length; i++) {
+      vertex(ys[i].x, ys[i].y);
+    }
+    endShape();
+
+    const dt = TWO_PI / fourierX.length;
+    time += dt;
+
+    if (time > TWO_PI) {
+      time = 0;
+      path = [];
   }
-  endShape();
-  if(ys.length > 250)ys.pop();
-  //noStroke();
-  //ellipse(0, y, 5);
-  angle -= 0.016;
+
 }
 
-function drawFor(f, xprev = 0, yprev = 0){
-  radiusp = radius * 4/((Math.PI) * f);
-  let x = xprev +radiusp * cos(f * angle);
-  let y = yprev + radiusp * sin(f * angle);
-  if(xprev == 0 && yprev == 0)translate(300, 300);
-  noFill();
-  stroke(255, 23);
-  ellipse(xprev, yprev, 2 * radiusp);
-  stroke(255);
-  line(xprev, yprev,  x, y);
-  fill(255)
-  //ellipse(x, y, 5, 5);
-  if(f > 100)return [x, y];
-  return drawFor(f + 2, x, y);
-  
-}
+
