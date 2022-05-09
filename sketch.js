@@ -6,7 +6,7 @@ let x = [];
 let draw = 1;
 
 function init() {
-  const skip = 4;
+  const skip = 6;
   for (let i = 0; i < drawing.length; i += skip ){
     x.push(new Complex(drawing[i].x - 300, drawing[i].y - 350));
   }
